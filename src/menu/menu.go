@@ -1,8 +1,14 @@
 package main
 
-import "fmt"
-import "os"
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"time"
+)
+
+const monitoramentos = 3
+const delay = 5
 
 func main() {
 
@@ -29,11 +35,13 @@ func main() {
 }
 
 func exibeIntroducao() {
+	fmt.Println("")
 	nome := "Dantas"
 	idade := 34
 	//versao := 1.1
 	fmt.Println("Olá sr.", nome, "sua idade é", idade, "anos.")
 	//fmt.Println("Este programa está na versão", versao)
+	fmt.Println("")
 }
 
 func lerComando() int {
@@ -41,6 +49,7 @@ func lerComando() int {
 	fmt.Scan(&comando)
 	// fmt.Println("O endereço da minha váriavel comando é ", &comando)
 	fmt.Println("O comando escolhido foi ", comando)
+	fmt.Println("")
 
 	return comando
 }
@@ -49,12 +58,27 @@ func exibirMenu() {
 	fmt.Println("1- Iniciar Monitoramento")
 	fmt.Println("2- Exibir Logs")
 	fmt.Println("0- Sair do Programa")
+	fmt.Println("")
 }
 
 func iniciarMonitoramento() {
 	fmt.Println("Monitorando...")
 	fmt.Println(" ")
-	site := "https://random-status-code.herokuapp.com/"
+
+	sites := []string{"https://random-status-code.herokuapp.com/", "https://www.alura.com.br",
+		"https://www.caelum.com.br"}
+
+	for i := 0; i < monitoramentos; i++ {
+		for _, site := range sites {
+			testeSite(site)
+		}
+		time.Sleep(delay * time.Second)
+		fmt.Println("")
+	}
+
+}
+
+func testeSite(site string) {
 	resp, _ := http.Get(site)
 	if resp.StatusCode == 200 {
 		fmt.Println("Site está no ar", site, "Status Code: ", resp.StatusCode)
